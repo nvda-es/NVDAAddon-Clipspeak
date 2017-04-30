@@ -86,6 +86,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def examine_focus(self):
 		focus=api.getFocusObject()
 
+		#Skip Mozilla windows, as they have their own handlers.
+		if focus.windowClassName=="MozillaWindowClass": return cc_none
+
 		#Check for an explorer/file browser window.
 		#Todo: Is this an accurate method?
 		if focus.windowClassName=="DirectUIHWND": return cc_file
