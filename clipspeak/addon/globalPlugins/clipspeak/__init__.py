@@ -6,9 +6,11 @@
 import globalPluginHandler
 import ui
 import api
-import clipboard_monitor
 
+from logHandler import log
 from controlTypes import *
+
+import clipboard_monitor
 
 #Constants
 
@@ -61,6 +63,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		cc_flag=self.examine_focus()
 
 		#Todo: If we can validate whether or not a control can work with the clipboard, we can return an invalid message here.
+		log.debug("Finding appropriate message for clipboard content type: %r"%cc_flag)
 		if cc_flag==cc_none: return
 
 		#Pick a word suitable to the content.
@@ -69,6 +72,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if cc_flag==cc_list: word=_("item")
 
 		#Validate and speak.
+		log.debug("Validating clipboard mode: %r"%cm_flag)
 		if cm_flag==cm_undo and self.can_undo(cc_flag): ui.message(_("Undo"))
 		if cm_flag==cm_select_all and self.can_select(cc_flag): ui.message(_("Select All"))
 		if cm_flag==cm_cut and self.can_cut(cc_flag):
@@ -85,6 +89,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def examine_focus(self):
 		focus=api.getFocusObject()
+		log.debug("Examining focus object: %r"%focus)
 
 		#Skip Mozilla windows, as they have their own handlers.
 		if focus.windowClassName=="MozillaWindowClass": return cc_none
@@ -98,6 +103,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		#If we're looking at text...
 		if focus.role==ROLE_EDITABLETEXT or focus.role==ROLE_DOCUMENT:
+			log.debug("Found text control")
 
 			#Retrieve the states in case we're read-only.
 			states=focus.states
@@ -105,17 +111,24 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				if state==STATE_READONLY: return cc_read_only_text
 
 			#Otherwise, we're just an ordinary text field.
+			log.debug("Field seems to be editable.")
 			return cc_text
 
 		#Comboboxes
 		if focus.role==ROLE_COMBOBOX:
+			log.debug("Found combo box.")
 
 			#Again, we need to evaluate states to make sure we're editable.
 			states=focus.states
 			for state in states:
 				if state==STATE_EDITABLE: return cc_text
 
+			#Otherwise, chances are we can't copy this.
+			log.debug("Combo box content seems to be read-only.")
+			return cc_none
+
 		#Todo: Other control types we need to check?
+		log.debug("Control type would not suggest clipboard operations.")
 		return cc_none
 
 	#Validation functions: In case we need to extend the script to allow more control/window types etc.
