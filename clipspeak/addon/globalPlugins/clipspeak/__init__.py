@@ -6,8 +6,9 @@
 import globalPluginHandler
 import ui
 import api
+import clipboard_monitor
 
-from controlTypes import ROLE_EDITABLETEXT, ROLE_LISTITEM, ROLE_DOCUMENT, STATE_READONLY
+from controlTypes import *
 
 #Constants
 
@@ -17,6 +18,7 @@ cc_text=1
 cc_read_only_text=2
 cc_file=3
 cc_list=4
+cc_other=5
 
 #Clipboard mode: What are we doing?
 cm_none=0
@@ -31,7 +33,6 @@ cm_select_all=5
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	#Script functions.
-	#Todo: Aim towards monitoring clipboard data for even greater accuracy.
 
 	def script_cut(self, gesture):
 		gesture.send()
@@ -43,6 +44,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_paste(self, gesture):
 		gesture.send()
+		if not self.__clipboard.valid_data(): return
 		self.speak_appropriate_message(cm_paste)
 
 	def script_undo(self, gesture):
@@ -69,8 +71,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		#Validate and speak.
 		if cm_flag==cm_undo and self.can_undo(cc_flag): ui.message(_("Undo"))
 		if cm_flag==cm_select_all and self.can_select(cc_flag): ui.message(_("Select All"))
-		if cm_flag==cm_cut and self.can_cut(cc_flag): ui.message(_("Cut "+word+" to clipboard"))
-		if cm_flag==cm_copy and self.can_copy(cc_flag): ui.message(_("Copy "+word+" to clipboard"))
+		if cm_flag==cm_cut and self.can_cut(cc_flag):
+			if not self.__clipboard.changed():
+				ui.message(_("No change."))
+				return
+			ui.message(_("Cut "+word+" to clipboard"))
+		if cm_flag==cm_copy and self.can_copy(cc_flag):
+			if not self.__clipboard.changed():
+				ui.message(_("No change."))
+				return
+			ui.message(_("Copy "+word+" to clipboard"))
 		if cm_flag==cm_paste and self.can_paste(cc_flag): ui.message(_("Pasted "+word+" from clipboard"))
 
 	def examine_focus(self):
@@ -93,6 +103,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 			#Otherwise, we're just an ordinary text field.
 			return cc_text
+
+		#Comboboxes
+		if focus.role==ROLE_COMBOBOX:
+
+			#Again, we need to evaluate states to make sure we're editable.
+			states=focus.states
+			for state in states:
+				if state==STATE_EDITABLE: return cc_text
 
 		#Todo: Other control types we need to check?
 		return cc_none
@@ -121,8 +139,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def can_paste(self, cc_flag):
 		if cc_flag==cc_read_only_text: return False
 
-		#Validate the clipboard and make sure there is something to paste.
+		#Todo: Validate the clipboard and make sure there is something to paste.
 		return True
+
+	#Define an object of type clipboard_monitor that will keep track of the clipboard for us.
+	__clipboard=clipboard_monitor.clipboard_monitor()
 
 	#Define the gestures. These are extensions to common Windows shortcuts and so shouldn't be changed.
 
