@@ -64,9 +64,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if cc_flag==cc_none: return
 
 		#Pick a word suitable to the content.
-		word="text"
-		if cc_flag==cc_file: word="file"
-		if cc_flag==cc_list: word="item"
+		word=_("text")
+		if cc_flag==cc_file: word=_("file")
+		if cc_flag==cc_list: word=_("item")
 
 		#Validate and speak.
 		if cm_flag==cm_undo and self.can_undo(cc_flag): ui.message(_("Undo"))
@@ -75,13 +75,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if not self.__clipboard.changed():
 				ui.message(_("No change."))
 				return
-			ui.message(_("Cut "+word+" to clipboard"))
+			ui.message(_("Cut %s to clipboard"%word))
 		if cm_flag==cm_copy and self.can_copy(cc_flag):
 			if not self.__clipboard.changed():
 				ui.message(_("No change."))
 				return
-			ui.message(_("Copy "+word+" to clipboard"))
-		if cm_flag==cm_paste and self.can_paste(cc_flag): ui.message(_("Pasted "+word+" from clipboard"))
+			ui.message(_("Copy %s to clipboard"%word))
+		if cm_flag==cm_paste and self.can_paste(cc_flag): ui.message(_("Pasted %s from clipboard"%word))
 
 	def examine_focus(self):
 		focus=api.getFocusObject()
