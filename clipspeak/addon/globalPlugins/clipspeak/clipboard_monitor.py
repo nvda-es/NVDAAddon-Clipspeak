@@ -21,13 +21,17 @@ class clipboard_monitor(object):
 		OpenClipboard(None)
 		format=0
 		while True:
-			format=EnumClipboardFormats(format)
-			log.debug("Retrieving clipboard format: %d"%format)
-			if format==0: break
-			pos=str(format)
-			log.debug("Retrieving data for format %s"%pos)
-			data[pos]=GetClipboardData(format)
-			log.debug("Data retrieved: %r"%data[pos])
+			try:
+				format=EnumClipboardFormats(format)
+				log.debug("Retrieving clipboard format: %d"%format)
+				if format==0: break
+				pos=str(format)
+				log.debug("Retrieving data for format %s"%pos)
+				data[pos]=GetClipboardData(format)
+				log.debug("Data retrieved: %r"%data[pos])
+			except:
+				log.debug("Cannot retrieve value. Moving on.")
+				continue
 		log.debug("Closing clipboard.")
 		CloseClipboard()
 		return data
