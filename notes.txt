@@ -1,0 +1,5 @@
+1. For editing facilities: Is there a way to check for select all/undo/redo capabilities?
+2. For clipboard facilities:
+A. Check the control being acted on. No message should be spoken on the taskbar, for instance.
+B. Check the clipboard data itself and speak an appropriate message.
+C. Unusual windows (sound editors, midi sequencers etc), we could check menu items, but sometimes copy operations are built into the keyboard accelerators rather than menus.
