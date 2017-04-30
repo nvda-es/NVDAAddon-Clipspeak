@@ -21,7 +21,7 @@ addon_info = {
 	# version
 	"addon_version" : "1.0",
 	# Author(s)
-	"addon_author" : u"Damien Lindley <damien@dcpendleton.plus.com>",
+	"addon_author" : u"Damien Sykes-Lindley <damien@dcpendleton.plus.com>",
 	# URL for the add-on documentation support
 	"addon_url" : None,
 	# Documentation file name

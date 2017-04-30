@@ -30,7 +30,8 @@ cm_paste=3
 
 #Not strictly clipboard, but...
 cm_undo=4
-cm_select_all=5
+cm_redo=5
+cm_select_all=6
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
@@ -53,6 +54,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gesture.send()
 		self.speak_appropriate_message(cm_undo)
 
+	def script_redo(self, gesture):
+		gesture.send()
+		self.speak_appropriate_message(cm_redo)
+
 	def script_select_all(self, gesture):
 		gesture.send()
 		self.speak_appropriate_message(cm_select_all)
@@ -74,6 +79,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		#Validate and speak.
 		log.debug("Validating clipboard mode: %r"%cm_flag)
 		if cm_flag==cm_undo and self.can_undo(cc_flag): ui.message(_("Undo"))
+		if cm_flag==cm_redo and self.can_redo(cc_flag): ui.message(_("Redo"))
 		if cm_flag==cm_select_all and self.can_select(cc_flag): ui.message(_("Select All"))
 		if cm_flag==cm_cut and self.can_cut(cc_flag):
 			if not self.__clipboard.changed():
@@ -91,8 +97,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		focus=api.getFocusObject()
 		log.debug("Examining focus object: %r"%focus)
 
-		#Skip Mozilla windows, as they have their own handlers.
-		if focus.windowClassName=="MozillaWindowClass": return cc_none
+		#Browse mode has its own handling, so we check for that before anything else.
+		tree=focus.treeInterceptor
+		if hasattr(tree, "TextInfo") and not tree.passThrough: return cc_none
 
 		#Check for an explorer/file browser window.
 		#Todo: Is this an accurate method?
@@ -138,6 +145,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if cc_flag==cc_read_only_text: return False
 		return True
 
+	def can_redo(self, cc_flag):
+		if cc_flag==cc_read_only_text: return False
+		return True
+
 	def can_select(self, cc_flag):
 		return True
 
@@ -163,9 +174,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	#Define the gestures. These are extensions to common Windows shortcuts and so shouldn't be changed.
 
+	scriptCategory=_("Clipboard")
 	__gestures={
 		"kb:Control+A": "select_all",
 			"kb:Control+Z": "undo",
+			"kb:Control+Y": "redo",
 		"kb:Control+X": "cut",
 		"kb:Control+C": "copy",
 		"kb:Control+V": "paste",
