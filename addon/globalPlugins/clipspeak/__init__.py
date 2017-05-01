@@ -106,13 +106,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if cm_flag==cm_redo and self.can_redo(cc_flag): ui.message(_("Redo"))
 		if cm_flag==cm_select_all and self.can_select(cc_flag): ui.message(_("Select All"))
 		if cm_flag==cm_cut and self.can_cut(cc_flag):
-			ui.message(_("Cut %s to clipboard"%word))
+			ui.message(_("Cut %s to clipboard")%word)
 		if cm_flag==cm_copy and self.can_copy(cc_flag):
 			if not self.__clipboard.changed():
 				ui.message(_("No change."))
 				return
-			ui.message(_("Copy %s to clipboard"%word))
-		if cm_flag==cm_paste and self.can_paste(cc_flag): ui.message(_("Pasted %s from clipboard"%word))
+			ui.message(_("Copy %s to clipboard")%word)
+		if cm_flag==cm_paste and self.can_paste(cc_flag): ui.message(_("Pasted %s from clipboard")%word)
 
 	def examine_focus(self):
 		focus=api.getFocusObject()
