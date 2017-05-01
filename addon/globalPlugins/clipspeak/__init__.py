@@ -1,7 +1,9 @@
 #Clipspeak
 #An addon to monitor and speak messages relating to clipboard operations.
 #By: Damien Lindley
-#19th April 2017
+#Created: 19th April 2017
+#This file is covered by the GNU General Public License.
+#See the file COPYING for more details.
 
 import globalPluginHandler
 import ui
@@ -40,33 +42,27 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	#Script functions.
 
 	def script_cut(self, gesture):
-		"""Cut selected item to clipboard, if appropriate."""
 		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_cut)
 
 	def script_copy(self, gesture):
-		"""Copy selected item to clipboard, if appropriate."""
 		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_copy)
 
 	def script_paste(self, gesture):
-		"""Paste item from clipboard, if appropriate."""
 		if self.process_input(gesture): return
 		if not self.__clipboard.valid_data(): return
 		self.speak_appropriate_message(cm_paste)
 
 	def script_undo(self, gesture):
-		"""Undo operation."""
 		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_undo)
 
 	def script_redo(self, gesture):
-		"""Redo operation."""
 		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_redo)
 
 	def script_select_all(self, gesture):
-		"""Select all."""
 		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_select_all)
 
@@ -96,23 +92,57 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if cc_flag==cc_none: return
 
 		#Pick a word suitable to the content.
+
+		#Translators: A single word representing text.
 		word=_("text")
-		if cc_flag==cc_file: word=_("file")
-		if cc_flag==cc_list: word=_("item")
+
+		if cc_flag==cc_file:
+
+			#Translators: A single word representing a file.
+			word=_("file")
+
+		if cc_flag==cc_list:
+
+			#Translators: A single word representing an item in a list.
+			word=_("item")
 
 		#Validate and speak.
 		log.debug("Validating clipboard mode: %r"%cm_flag)
-		if cm_flag==cm_undo and self.can_undo(cc_flag): ui.message(_("Undo"))
-		if cm_flag==cm_redo and self.can_redo(cc_flag): ui.message(_("Redo"))
-		if cm_flag==cm_select_all and self.can_select(cc_flag): ui.message(_("Select All"))
+
+		if cm_flag==cm_undo and self.can_undo(cc_flag):
+
+			#Translators: Message to speak when undoing.
+			ui.message(_("Undo"))
+
+		if cm_flag==cm_redo and self.can_redo(cc_flag):
+
+			#Translators: A message spoken when redoing a previously undone operation.
+			ui.message(_("Redo"))
+
+		if cm_flag==cm_select_all and self.can_select(cc_flag):
+
+			#Translators: A message to speak when selecting or highlighting all content.
+			ui.message(_("Select All"))
+
 		if cm_flag==cm_cut and self.can_cut(cc_flag):
+
+			#Translators: A message to speak when cutting an item to the clipboard.
 			ui.message(_("Cut %s to clipboard")%word)
+
 		if cm_flag==cm_copy and self.can_copy(cc_flag):
 			if not self.__clipboard.changed():
+
+				#Translators: A message spoken when no change has been detected on the clipboard.
 				ui.message(_("No change."))
 				return
+
+			#Translators: A message spoken when copying to the clipboard.
 			ui.message(_("Copy %s to clipboard")%word)
-		if cm_flag==cm_paste and self.can_paste(cc_flag): ui.message(_("Pasted %s from clipboard")%word)
+
+		if cm_flag==cm_paste and self.can_paste(cc_flag):
+
+			#Translators: A message spoken when pasting to the clipboard.
+			ui.message(_("Pasted %s from clipboard")%word)
 
 	def examine_focus(self):
 		focus=api.getFocusObject()
@@ -190,9 +220,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	#Define an object of type clipboard_monitor that will keep track of the clipboard for us.
 	__clipboard=clipboard_monitor.clipboard_monitor()
 
-	#Define the gestures. These are extensions to common Windows shortcuts and so shouldn't be changed.
-
+	#Translators: Category displayed in Input Gestures configuration.
 	scriptCategory=_("Clipboard")
+
+	#Define the default gestures.
+
 	__gestures={
 		"kb:Control+A": "select_all",
 			"kb:Control+Z": "undo",
@@ -200,4 +232,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"kb:Control+X": "cut",
 		"kb:Control+C": "copy",
 		"kb:Control+V": "paste",
-}
+	}
+
+
+	#Translators: Input help and documentation strings
+	script_cut.__doc__=_("Cut selected item to clipboard, if appropriate.")
+	script_copy.__doc__=_("Copy selected item to clipboard, if appropriate.")
+	script_paste.__doc__=_("Paste item from clipboard, if appropriate.")
+	script_undo.__doc__=_("Undo operation.""")
+	script_redo.__doc__=_("Redo operation.")
+	script_select_all.__doc__=_("Select all.")

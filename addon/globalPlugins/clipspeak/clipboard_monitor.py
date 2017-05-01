@@ -1,7 +1,9 @@
 #Clipboard_monitor
 #A module to monitor for clipboard changes
 #By: Damien Lindley
-#20th April 2017
+#Created: 20th April 2017
+#This file is covered by the GNU General Public License.
+#See the file COPYING for more details.
 
 from win32clipboard import *
 from logHandler import log
