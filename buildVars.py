@@ -23,7 +23,7 @@ addon_info = {
 	# Author(s)
 	"addon_author" : u"Damien Sykes-Lindley <damien@dcpendleton.plus.com>",
 	# URL for the add-on documentation support
-	"addon_url" : None,
+	"addon_url" : "https://addons.nvda-project.org",
 	# Documentation file name
 	"addon_docFileName" : "readme.html",
 }
@@ -33,7 +33,7 @@ import os.path
 
 # Define the python files that are the sources of your add-on.
 # You can use glob expressions here, they will be expanded.
-pythonSources = []
+pythonSources = [os.path.join("addon", "globalPlugins", "clipspeak", "*.py")]
 
 # Files that contain strings for translation. Usually your python sources
 i18nSources = pythonSources + ["buildVars.py"]
