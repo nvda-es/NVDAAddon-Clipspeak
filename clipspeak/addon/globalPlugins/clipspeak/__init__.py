@@ -6,6 +6,8 @@
 import globalPluginHandler
 import ui
 import api
+import inputCore
+import scriptHandler
 
 from logHandler import log
 from controlTypes import *
@@ -38,31 +40,53 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	#Script functions.
 
 	def script_cut(self, gesture):
-		gesture.send()
+		"""Cut selected item to clipboard, if appropriate."""
+		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_cut)
 
 	def script_copy(self, gesture):
-		gesture.send()
+		"""Copy selected item to clipboard, if appropriate."""
+		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_copy)
 
 	def script_paste(self, gesture):
-		gesture.send()
+		"""Paste item from clipboard, if appropriate."""
+		if self.process_input(gesture): return
 		if not self.__clipboard.valid_data(): return
 		self.speak_appropriate_message(cm_paste)
 
 	def script_undo(self, gesture):
-		gesture.send()
+		"""Undo operation."""
+		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_undo)
 
 	def script_redo(self, gesture):
-		gesture.send()
+		"""Redo operation."""
+		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_redo)
 
 	def script_select_all(self, gesture):
-		gesture.send()
+		"""Select all."""
+		if self.process_input(gesture): return
 		self.speak_appropriate_message(cm_select_all)
 
 	#Internal functions: Examines our environment so we can speak the appropriate message.
+
+	def process_input(self, gesture):
+		gesture.send()
+		scripts=[]
+		maps=[inputCore.manager.userGestureMap, inputCore.manager.localeGestureMap]
+		for map in maps:
+			for identifier in gesture.identifiers:
+				scripts.extend(map.getScriptsForGesture(identifier))
+		focus=api.getFocusObject()
+		tree=focus.treeInterceptor
+		if tree and tree.isReady:
+			func=scriptHandler._getObjScript(tree, gesture, scripts)
+			if func and (not tree.passThrough or getattr(func,"ignoreTreeInterceptorPassThrough",False)):
+				func(tree)
+				return True
+		return False
 
 	def speak_appropriate_message(self, cm_flag):
 		cc_flag=self.examine_focus()
@@ -95,11 +119,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def examine_focus(self):
 		focus=api.getFocusObject()
+		if not focus: return cc_none
 		log.debug("Examining focus object: %r"%focus)
-
-		#Browse mode has its own handling, so we check for that before anything else.
-		tree=focus.treeInterceptor
-		if hasattr(tree, "TextInfo") and not tree.passThrough: return cc_none
 
 		#Check for an explorer/file browser window.
 		#Todo: Is this an accurate method?

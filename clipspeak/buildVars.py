@@ -25,7 +25,7 @@ addon_info = {
 	# URL for the add-on documentation support
 	"addon_url" : None,
 	# Documentation file name
-	"addon_docFileName" : None,
+	"addon_docFileName" : "readme.html",
 }
 
 
