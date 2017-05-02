@@ -168,7 +168,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not focus: return cc_none
 		log.debug("Examining focus object: %r"%focus)
 
-		# Retrieve the control's states.
+		# Retrieve the control's states and roles.
 		states=focus.states
 
 		# Check for an explorer/file browser window.
@@ -179,12 +179,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if focus.role==ROLE_LISTITEM: return cc_list
 
 		# Check if we're looking at text.
-		if STATE_EDITABLE in states:
+		if STATE_EDITABLE or STATE_MULTILINE in states:
 			if STATE_READONLY in states: return cc_read_only_text
 
 			# Otherwise, we're just an ordinary text field.
 			log.debug("Field seems to be editable.")
 			return cc_text
+
+		# For some reason, not all controls have an editable state, even when they clearly are.
+		if focus.role==ROLE_EDITABLETEXT: return cc_text
 
 		# Todo: Other control types we need to check?
 		log.debug("Control type would not suggest clipboard operations.")
