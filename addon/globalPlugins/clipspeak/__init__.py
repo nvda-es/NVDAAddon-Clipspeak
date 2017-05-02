@@ -169,7 +169,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		log.debug("Examining focus object: %r"%focus)
 
 		# Retrieve the control's states.
-			states=focus.states
+		states=focus.states
 
 		# Check for an explorer/file browser window.
 		# Todo: Is this an accurate method?
@@ -179,8 +179,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if focus.role==ROLE_LISTITEM: return cc_list
 
 		# Check if we're looking at text.
-			if STATE_EDITABLE in states:
-				if STATE_READONLY in states: return cc_read_only_text
+		if STATE_EDITABLE in states:
+			if STATE_READONLY in states: return cc_read_only_text
 
 			# Otherwise, we're just an ordinary text field.
 			log.debug("Field seems to be editable.")
