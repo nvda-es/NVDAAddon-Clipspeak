@@ -14,6 +14,6 @@ By default, Clipspeak's gestures are mapped to those commonly used by English ve
 * CTRL+C: Copy
 * CTRL+V: Paste
 
-If these are not the shortcuts commonly used for these tasks on your version of Windows, you will need to remap these gestures in the input gestures configuration.
+If these are not the shortcuts commonly used for these tasks on your version of Windows, you will need to remap these gestures in the input gestures configuration under the Clipboard category.
 
 [1]: http://addons.nvda-project.org/files/get.php?file=cs

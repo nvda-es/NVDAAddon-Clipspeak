@@ -168,6 +168,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not focus: return cc_none
 		log.debug("Examining focus object: %r"%focus)
 
+		# Retrieve the control's states.
+			states=focus.states
+
 		# Check for an explorer/file browser window.
 		# Todo: Is this an accurate method?
 		if focus.windowClassName=="DirectUIHWND": return cc_file
@@ -175,31 +178,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		# Check for a list item.
 		if focus.role==ROLE_LISTITEM: return cc_list
 
-		# If we're looking at text...
-		if focus.role==ROLE_EDITABLETEXT or focus.role==ROLE_DOCUMENT:
-			log.debug("Found text control")
-
-			# Retrieve the states in case we're read-only.
-			states=focus.states
-			for state in states:
-				if state==STATE_READONLY: return cc_read_only_text
+		# Check if we're looking at text.
+			if STATE_EDITABLE in states:
+				if STATE_READONLY in states: return cc_read_only_text
 
 			# Otherwise, we're just an ordinary text field.
 			log.debug("Field seems to be editable.")
 			return cc_text
-
-		# Comboboxes.
-		if focus.role==ROLE_COMBOBOX:
-			log.debug("Found combo box.")
-
-			# Again, we need to evaluate states to make sure we're editable.
-			states=focus.states
-			for state in states:
-				if state==STATE_EDITABLE: return cc_text
-
-			# Otherwise, chances are we can't copy this.
-			log.debug("Combo box content seems to be read-only.")
-			return cc_none
 
 		# Todo: Other control types we need to check?
 		log.debug("Control type would not suggest clipboard operations.")
