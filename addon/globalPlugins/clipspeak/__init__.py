@@ -43,43 +43,60 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	# Script functions:
 
 	def script_cut(self, gesture):
+		log.debug("Script activated: Cut.")
+		log.debug("Processing input gesture.")
 		if self.process_input(gesture): return
+		log.debug("Speaking message.")
 		self.speak_appropriate_message(cm_cut)
 
 	# Translators: Documentation for cut script.
 	script_cut.__doc__=_("Cut selected item to clipboard, if appropriate.")
 
 	def script_copy(self, gesture):
+		log.debug("Script activated: Copy.")
+		log.debug("Processing input gesture.")
 		if self.process_input(gesture): return
+		log.debug("Speaking message.")
 		self.speak_appropriate_message(cm_copy)
 
 	# Translators: Documentation for copy script.
 	script_copy.__doc__=_("Copy selected item to clipboard, if appropriate.")
 
 	def script_paste(self, gesture):
+		log.debug("Script activated: Paste.")
+		log.debug("Processing input gesture.")
 		if self.process_input(gesture): return
-		if not self.__clipboard.valid_data(): return
+		log.debug("Speaking message.")
 		self.speak_appropriate_message(cm_paste)
 
 	# Translators: Documentation for paste script.
 	script_paste.__doc__=_("Paste item from clipboard, if appropriate.")
 
 	def script_undo(self, gesture):
+		log.debug("Script activated: Undo.")
+		log.debug("Processing input gesture.")
 		if self.process_input(gesture): return
+		log.debug("Speaking message.")
 		self.speak_appropriate_message(cm_undo)
 
 	# Translators: Documentation for undo script.
 	script_undo.__doc__=_("Undo operation.""")
 
 	def script_redo(self, gesture):
+		log.debug("Script activated: Redo.")
+		log.debug("Processing input gesture.")
 		if self.process_input(gesture): return
+		log.debug("Speaking message.")
 		self.speak_appropriate_message(cm_redo)
 
 	# Translators: Documentation for redo script.
 	script_redo.__doc__=_("Redo operation.")
 
 	def script_select_all(self, gesture):
+		log.debug("Script activated: Select all.")
+		log.debug("Processing input gesture.")
 		if self.process_input(gesture): return
+		log.debug("Speaking message.")
 		self.speak_appropriate_message(cm_select_all)
 
 	# Translators: Documentation for select_all script.
@@ -88,19 +105,42 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	# Internal functions: Examines our environment so we can speak the appropriate message.
 
 	def process_input(self, gesture):
-		gesture.send()
+
+		log.debug("Evaluating possible gestures.")
 		scripts=[]
 		maps=[inputCore.manager.userGestureMap, inputCore.manager.localeGestureMap]
+
+		log.debug("Found gesture mapping: \r"%maps)
+		log.debug("Enumerating scripts for these maps.")
 		for map in maps:
+			log.debug("Enumerating gestures for map %r"%map)
 			for identifier in gesture.identifiers:
+				log.debug("Enumerating scripts for gesture %r"%identifier)
 				scripts.extend(map.getScriptsForGesture(identifier))
+
+		log.debug("Found scripts: %r"%scripts)
+
 		focus=api.getFocusObject()
+		log.debug("Examining focus: %r"%focus)
 		tree=focus.treeInterceptor
+		log.debug("Examining tree interceptor: %r"%tree)
+
+		log.debug("Checking tree interceptor state.")
 		if tree and tree.isReady:
+
+			log.debug("Tree interceptor in use. Retrieving scripts for the interceptor.")
 			func=scriptHandler._getObjScript(tree, gesture, scripts)
+			log.debug("Examining object: %r"%func)
+
+			log.debug("Examining function attributes.")
 			if func and (not tree.passThrough or getattr(func,"ignoreTreeInterceptorPassThrough",False)):
+
+				log.debug("This gesture is already handled elsewhere. Executing associated function.")
 				func(tree)
 				return True
+
+		log.debug("Nothing associated here. Pass straight to the system.")
+		gesture.send()
 		return False
 
 	def speak_appropriate_message(self, cm_flag):
@@ -163,6 +203,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			# Translators: A message spoken when pasting to the clipboard.
 			ui.message(_("Pasted %s")%word)
 
+
 	def examine_focus(self):
 		focus=api.getFocusObject()
 		if not focus: return cc_none
@@ -221,7 +262,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def can_paste(self, cc_flag):
 		if cc_flag==cc_read_only_text: return False
 
-		# Todo: Validate the clipboard and make sure there is something to paste.
+		log.debug("Checking clipboard.")
+		if not self.__clipboard.valid_data(): return False
 		return True
 
 	# Define an object of type clipboard_monitor that will keep track of the clipboard for us.

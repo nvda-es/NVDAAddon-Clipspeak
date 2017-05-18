@@ -20,7 +20,11 @@ class clipboard_monitor(object):
 	def enumerate_clipboard(self):
 		data={}
 		log.debug("Opening the clipboard for enumeration.")
-		OpenClipboard(None)
+		try:
+			OpenClipboard(None)
+		except:
+			log.debug("Clipboard failed to open. Cannot enumerate.")
+			return data
 		format=0
 		while True:
 			try:
@@ -32,19 +36,31 @@ class clipboard_monitor(object):
 				data[pos]=GetClipboardData(format)
 				log.debug("Data retrieved: %r"%data[pos])
 			except:
-				log.debug("Cannot retrieve value. Moving on.")
-				continue
+				log.debug("Cannot retrieve data.")
+				break
 		log.debug("Closing clipboard.")
 		CloseClipboard()
 		return data
 
 	def valid_data(self):
-		return self.enumerate_clipboard()!={}
+		log.debug("Validating clipboard data.")
+		comparison=self.enumerate_clipboard()
+		if comparison=={}:
+			log.debug("No data appears to be on the clipboard.")
+			return False
+
+		log.debug("The clipboard contains valid data.")
+		return True
 
 	def changed(self):
-		if self.enumerate_clipboard()==self.__clipboard_data: return False
+		log.debug("Checking for clipboard changes.")
+		comparison=self.enumerate_clipboard()
+		if comparison==self.__clipboard_data:
+			log.debug("No changes detected.")
+			return False
+
 		log.debug("Clipboard data has changed. Updating cached data...")
-		self.__clipboard_data=self.enumerate_clipboard()
+		self.__clipboard_data=comparison
 		return True
 
 	__clipboard_data={}
