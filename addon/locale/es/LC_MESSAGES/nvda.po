@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clipspeak\n"
-"POT-Creation-Date: 2018-04-17 08:38+0100\n"
-"PO-Revision-Date: 2018-04-17 08:43+0100\n"
+"POT-Creation-Date: 2018-04-17 19:54+0100\n"
+"PO-Revision-Date: 2018-04-17 19:54+0100\n"
 "Last-Translator: Iván Novegil <ivan.novegil.cancelas@gmail.com>\n"
 "Language-Team: Comunidad hispanohablante de NVDA NVDA.es <contacto@nvda.es>\n"
 "Language: es_ES\n"
@@ -13,74 +13,100 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: ../../../globalPlugins/clipspeak\n"
+"X-Poedit-SearchPath-1: ../../../..\n"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:53
 #: ../../../globalPlugins/clipspeak/__init__.py:53
 msgid "Cut selected item to clipboard, if appropriate."
 msgstr "Cortar elemento seleccionado al portapapeles, caso de ser apropiado."
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:63
 #: ../../../globalPlugins/clipspeak/__init__.py:63
 msgid "Copy selected item to clipboard, if appropriate."
 msgstr "Copiar elemento seleccionado al portapapeles, caso de ser apropiado."
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:73
 #: ../../../globalPlugins/clipspeak/__init__.py:73
 msgid "Paste item from clipboard, if appropriate."
 msgstr "Pegar elemento del portapapeles, caso de ser apropiado."
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:83
 #: ../../../globalPlugins/clipspeak/__init__.py:83
 msgid "Undo operation."
 msgstr "Operación de deshacer."
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:93
 #: ../../../globalPlugins/clipspeak/__init__.py:93
 msgid "Redo operation."
 msgstr "Operación de rehacer."
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:103
 #: ../../../globalPlugins/clipspeak/__init__.py:103
 msgid "Select all."
 msgstr "Seleccionar todo."
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:156
 #: ../../../globalPlugins/clipspeak/__init__.py:156
 msgid "text"
 msgstr "texto"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:161
 #: ../../../globalPlugins/clipspeak/__init__.py:161
 msgid "file"
 msgstr "archivo"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:166
 #: ../../../globalPlugins/clipspeak/__init__.py:166
 msgid "item"
 msgstr "elemento"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:174
 #: ../../../globalPlugins/clipspeak/__init__.py:174
 msgid "Undo"
 msgstr "Deshacer"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:179
 #: ../../../globalPlugins/clipspeak/__init__.py:179
 msgid "Redo"
 msgstr "Rehacer"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:184
 #: ../../../globalPlugins/clipspeak/__init__.py:184
 msgid "Select All"
 msgstr "Seleccionar todo"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:189
 #: ../../../globalPlugins/clipspeak/__init__.py:189
 #, python-format
 msgid "Cut %s"
 msgstr "Cortar %s"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:195
 #: ../../../globalPlugins/clipspeak/__init__.py:195
 msgid "No change."
 msgstr "Sin cambios."
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:199
 #: ../../../globalPlugins/clipspeak/__init__.py:199
 #, python-format
 msgid "Copy %s"
 msgstr "Copiar %s"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:204
 #: ../../../globalPlugins/clipspeak/__init__.py:204
 #, python-format
 msgid "Pasted %s"
 msgstr "Pegar %s"
 
+#: ../../../../addon/globalPlugins/clipspeak/__init__.py:273
 #: ../../../globalPlugins/clipspeak/__init__.py:273
 msgid "Clipboard"
 msgstr "Portapapeles"
+
+#: ../../../../buildVars.py:17
+msgid "Clipspeak"
+msgstr "Clipspeak"
+
+#: ../../../../buildVars.py:20
+msgid "Add-on to speak clipboard information."
+msgstr "Complemento para verbalizar información del portapapeles."
